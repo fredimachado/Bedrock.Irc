@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bedrock.Irc", "Bedrock.Irc\Bedrock.Irc.csproj", "{78B5DDA6-911A-4D9A-B123-B9742EB306B5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3B1FFCB4-2CDB-4F9F-AB9E-F3401166EA07}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yaml = docker-compose.yaml
+		nuget.config = nuget.config
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A44D8E3B-5633-4F27-9F40-B20F934518D2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bedrock.Irc.Tests", "Bedrock.Irc.Tests\Bedrock.Irc.Tests.csproj", "{E68E55FB-0566-4A1F-9B7F-9DA7C41C5F84}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C3B16D85-260A-47F8-BF5C-A5224B033552}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{78B5DDA6-911A-4D9A-B123-B9742EB306B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78B5DDA6-911A-4D9A-B123-B9742EB306B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78B5DDA6-911A-4D9A-B123-B9742EB306B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78B5DDA6-911A-4D9A-B123-B9742EB306B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E68E55FB-0566-4A1F-9B7F-9DA7C41C5F84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E68E55FB-0566-4A1F-9B7F-9DA7C41C5F84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E68E55FB-0566-4A1F-9B7F-9DA7C41C5F84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E68E55FB-0566-4A1F-9B7F-9DA7C41C5F84}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{78B5DDA6-911A-4D9A-B123-B9742EB306B5} = {C3B16D85-260A-47F8-BF5C-A5224B033552}
+		{E68E55FB-0566-4A1F-9B7F-9DA7C41C5F84} = {A44D8E3B-5633-4F27-9F40-B20F934518D2}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E66F6DA5-0C66-4F27-860F-386F8EB33BAB}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  ircd:
+    image: inspircd/inspircd-docker
+    container_name: ircd
+    ports:
+      - "6667:6667"
