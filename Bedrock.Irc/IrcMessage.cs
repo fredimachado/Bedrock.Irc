@@ -27,20 +27,20 @@ public class IrcMessage
 
     private void Parse(ref SequenceReader<byte> reader)
     {
-        if (!reader.CurrentSpan.Contains((byte)' '))
+        if (!reader.UnreadSpan.Contains(Constants.Space))
         {
-            Command = Encoding.UTF8.GetString(reader.CurrentSpan);
+            Command = Encoding.UTF8.GetString(reader.UnreadSpan);
             return;
         }
 
-        reader.TryReadTo(out ReadOnlySpan<byte> commandSpan, (byte)' ');
+        reader.TryReadTo(out ReadOnlySpan<byte> commandSpan, Constants.Space);
         Command = Encoding.UTF8.GetString(commandSpan);
 
         var parameters = new List<string>();
 
-        while (reader.TryReadTo(out ReadOnlySequence<byte> parameterSequence, (byte)' '))
+        while (reader.TryReadTo(out ReadOnlySequence<byte> parameterSequence, Constants.Space))
         {
-            if (parameterSequence.FirstSpan.StartsWith(new[] { (byte)':' }))
+            if (parameterSequence.FirstSpan.StartsWith(new[] { Constants.Colon }))
             {
                 reader.Rewind(parameterSequence.Length);
                 parameters.Add(Encoding.UTF8.GetString(reader.UnreadSpan));
@@ -51,7 +51,7 @@ public class IrcMessage
             parameters.Add(Encoding.UTF8.GetString(parameterSequence));
         }
 
-        if (reader.UnreadSpan.StartsWith(new[] { (byte)':' }))
+        if (reader.UnreadSpan.StartsWith(new[] { Constants.Colon }))
         {
             parameters.Add(Encoding.UTF8.GetString(reader.UnreadSpan.Slice(1)));
         }
@@ -66,19 +66,19 @@ public class IrcMessage
     private void ParsePrefix(ref SequenceReader<byte> reader)
     {
         // Check if message has prefix, if not, return
-        if (!reader.TryPeek(out var value) || value != (byte)':')
+        if (!reader.TryPeek(out var value) || value != Constants.Colon)
         {
             return;
         }
 
         reader.Advance(1);
-        reader.TryReadTo(out ReadOnlySequence<byte> prefixData, (byte)' ');
+        reader.TryReadTo(out ReadOnlySequence<byte> prefixData, Constants.Space);
 
         var prefixSequence = new SequenceReader<byte>(prefixData);
 
-        if (prefixSequence.TryReadTo(out ReadOnlySequence<byte> userHost, (byte)'@'))
+        if (prefixSequence.TryReadTo(out ReadOnlySequence<byte> userHost, Constants.AtSign))
         {
-            if (userHost.PositionOf((byte)'!') is SequencePosition userPosition)
+            if (userHost.PositionOf(Constants.ExclamationMark) is SequencePosition userPosition)
             {
                 From = Encoding.UTF8.GetString(userHost.Slice(0, userPosition));
                 User = Encoding.UTF8.GetString(userHost.Slice(userPosition.GetInteger()));
@@ -92,7 +92,7 @@ public class IrcMessage
         }
         else
         {
-            if (prefixSequence.TryReadTo(out ReadOnlySequence<byte> from, (byte)'!'))
+            if (prefixSequence.TryReadTo(out ReadOnlySequence<byte> from, Constants.ExclamationMark))
             {
                 From = Encoding.UTF8.GetString(from);
                 User = Encoding.UTF8.GetString(prefixSequence.UnreadSpan);
