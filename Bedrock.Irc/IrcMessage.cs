@@ -48,7 +48,10 @@ public class IrcMessage
                 break;
             }
 
-            parameters.Add(Encoding.UTF8.GetString(parameterSequence));
+            if (parameterSequence.Length > 0)
+            {
+                parameters.Add(Encoding.UTF8.GetString(parameterSequence));
+            }
         }
 
         if (reader.UnreadSpan.StartsWith(new[] { Constants.Colon }))
@@ -57,7 +60,7 @@ public class IrcMessage
         }
         else if (reader.Remaining > 0)
         {
-            parameters.Add(Encoding.UTF8.GetString(reader.UnreadSpan));
+            parameters.Add(Encoding.UTF8.GetString(reader.UnreadSpan).Trim());
         }
 
         Parameters = parameters.ToArray();
