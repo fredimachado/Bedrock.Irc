@@ -6,7 +6,7 @@ using System.Net;
 
 var loggerFactory = LoggerFactory.Create(builder =>
 {
-    builder.SetMinimumLevel(LogLevel.Debug);
+    builder.SetMinimumLevel(LogLevel.Information);
     builder.AddConsole();
 });
 

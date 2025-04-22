@@ -12,7 +12,7 @@ public class IrcMessage
     public string Command { get; private set; }
     public string[] Parameters { get; private set; }
 
-    public string Trailing => Parameters is not null ? Parameters[Parameters.Length - 1] : string.Empty;
+    public string Trailing => Parameters is not null ? Parameters[^1] : string.Empty;
     public string Raw { get; }
 
     public IrcMessage(ReadOnlySequence<byte> payload)
@@ -29,7 +29,7 @@ public class IrcMessage
     {
         if (!reader.UnreadSpan.Contains(Constants.Space))
         {
-            Command = Encoding.UTF8.GetString(reader.UnreadSpan);
+            Command = Encoding.UTF8.GetString(reader.UnreadSpan.TrimEnd(IrcProtocol.CrLf));
             return;
         }
 
@@ -40,10 +40,10 @@ public class IrcMessage
 
         while (reader.TryReadTo(out ReadOnlySequence<byte> parameterSequence, Constants.Space))
         {
-            if (parameterSequence.FirstSpan.StartsWith(new[] { Constants.Colon }))
+            if (parameterSequence.FirstSpan.StartsWith([Constants.Colon]))
             {
                 reader.Rewind(parameterSequence.Length);
-                parameters.Add(Encoding.UTF8.GetString(reader.UnreadSpan));
+                parameters.Add(Encoding.UTF8.GetString(reader.UnreadSpan.TrimEnd(IrcProtocol.CrLf)));
                 reader.AdvanceToEnd();
                 break;
             }
@@ -54,16 +54,20 @@ public class IrcMessage
             }
         }
 
-        if (reader.UnreadSpan.StartsWith(new[] { Constants.Colon }))
+        // Check if there's only CrLf left
+        if (reader.TryPeek(out var value) && value != IrcProtocol.CR)
         {
-            parameters.Add(Encoding.UTF8.GetString(reader.UnreadSpan.Slice(1)));
-        }
-        else if (reader.Remaining > 0)
-        {
-            parameters.Add(Encoding.UTF8.GetString(reader.UnreadSpan).Trim());
+            if (reader.UnreadSpan.StartsWith([Constants.Colon]))
+            {
+                parameters.Add(Encoding.UTF8.GetString(reader.UnreadSpan.Slice(1).TrimEnd(IrcProtocol.CrLf)));
+            }
+            else if (reader.Remaining > 0)
+            {
+                parameters.Add(Encoding.UTF8.GetString(reader.UnreadSpan.TrimEnd(IrcProtocol.CrLf)));
+            }
         }
 
-        Parameters = parameters.ToArray();
+        Parameters = [.. parameters];
     }
 
     private void ParsePrefix(ref SequenceReader<byte> reader)
@@ -84,7 +88,7 @@ public class IrcMessage
             if (userHost.PositionOf(Constants.ExclamationMark) is SequencePosition userPosition)
             {
                 From = Encoding.UTF8.GetString(userHost.Slice(0, userPosition));
-                User = Encoding.UTF8.GetString(userHost.Slice(userPosition.GetInteger()));
+                User = Encoding.UTF8.GetString(userHost.Slice(userPosition).FirstSpan.TrimStart(Constants.ExclamationMark));
             }
             else
             {

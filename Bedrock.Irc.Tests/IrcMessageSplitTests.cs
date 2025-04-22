@@ -10,7 +10,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_Simple()
     {
-        var message = "foo bar baz asdf";
+        var message = "foo bar baz asdf\r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -24,7 +24,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_WithPrefix()
     {
-        var message = ":coolguy foo bar baz asdf";
+        var message = ":coolguy foo bar baz asdf\r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -39,7 +39,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_WithTrailingParam()
     {
-        var message = "foo bar baz :asdf quux";
+        var message = "foo bar baz :asdf quux\r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -54,7 +54,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_WithTrailingParamEmpty()
     {
-        var message = "foo bar baz :";
+        var message = "foo bar baz :\r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -69,7 +69,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_WithTrailingParamStartingWithColon()
     {
-        var message = "foo bar baz ::asdf";
+        var message = "foo bar baz ::asdf\r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -84,7 +84,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_WithSourceAndTrailingParam()
     {
-        var message = ":coolguy foo bar baz :asdf quux";
+        var message = ":coolguy foo bar baz :asdf quux\r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -100,7 +100,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_WithSourceAndTrailingParamWithSpaces()
     {
-        var message = ":coolguy foo bar baz :  asdf quux ";
+        var message = ":coolguy foo bar baz :  asdf quux \r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -116,7 +116,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_CommandWithSourceAndTrailingParam()
     {
-        var message = ":coolguy PRIVMSG bar :lol :) ";
+        var message = ":coolguy PRIVMSG bar :lol :) \r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -131,7 +131,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_WithSourceAndTrailingParamEmpty()
     {
-        var message = ":coolguy foo bar baz :";
+        var message = ":coolguy foo bar baz :\r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -147,7 +147,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_WithSourceAndTrailingParamWithWhitespace()
     {
-        var message = ":coolguy foo bar baz :  ";
+        var message = ":coolguy foo bar baz :  \r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -163,7 +163,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_CommandWithSimpleLastParam()
     {
-        var message = ":src JOIN #chan";
+        var message = ":src JOIN #chan\r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -177,7 +177,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_CommandWithColonSeparatedLastParam()
     {
-        var message = ":src JOIN :#chan";
+        var message = ":src JOIN :#chan\r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -191,7 +191,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_CommandWithoutLastParam()
     {
-        var message = ":src AWAY";
+        var message = ":src AWAY\r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -203,7 +203,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_CommandWithoutLastParamWithWhitespace()
     {
-        var message = ":src AWAY ";
+        var message = ":src AWAY \r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -215,7 +215,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_TabIsNotConsideredWhitespace()
     {
-        var message = ":cool\tguy foo bar baz";
+        var message = ":cool\tguy foo bar baz\r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -230,7 +230,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_WithWeirdControlCodesInPrefix()
     {
-        var message = ":coolguy!ag@net\x035w\x03ork.admin PRIVMSG foo :bar baz";
+        var message = ":coolguy!ag@net\x035w\x03ork.admin PRIVMSG foo :bar baz\r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -247,7 +247,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_WithWeirdControlCodesInPrefix2()
     {
-        var message = ":coolguy!~ag@n\x02et\x0305w\x0fork.admin PRIVMSG foo :bar baz";
+        var message = ":coolguy!~ag@n\x02et\x0305w\x0fork.admin PRIVMSG foo :bar baz\r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -264,7 +264,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_JustCommand()
     {
-        var message = "COMMAND";
+        var message = "COMMAND\r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -275,7 +275,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_BrokenMessagesFromUnreal()
     {
-        var message = ":gravel.mozilla.org 432  #momo :Erroneous Nickname: Illegal characters";
+        var message = ":gravel.mozilla.org 432  #momo :Erroneous Nickname: Illegal characters\r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -290,7 +290,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_Mode()
     {
-        var message = ":gravel.mozilla.org MODE #tckk +n ";
+        var message = ":gravel.mozilla.org MODE #tckk +n \r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -305,7 +305,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_Mode2()
     {
-        var message = ":services.esper.net MODE #foo-bar +o foobar  ";
+        var message = ":services.esper.net MODE #foo-bar +o foobar  \r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -321,7 +321,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_Mode3()
     {
-        var message = ":SomeOp MODE #channel :+i";
+        var message = ":SomeOp MODE #channel :+i\r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);
@@ -336,7 +336,7 @@ public class IrcMessageSplitTests
     [Fact]
     public void TestMessage_Mode4()
     {
-        var message = ":SomeOp MODE #channel +oo SomeUser :AnotherUser";
+        var message = ":SomeOp MODE #channel +oo SomeUser :AnotherUser\r\n";
         var sequence = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(message));
 
         var ircMessage = new IrcMessage(sequence);

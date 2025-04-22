@@ -6,20 +6,18 @@ namespace Bedrock.Irc;
 
 public class IrcProtocol : IMessageReader<IrcMessage>, IMessageWriter<string>
 {
-    private readonly static byte[] IrcMessageDelimiter;
+    internal const byte CR = (byte)'\r';
+    internal const byte LF = (byte)'\n';
 
-    static IrcProtocol()
-    {
-        IrcMessageDelimiter = new byte[] { 0xD, 0xA }; // CR LF
-    }
+    internal static ReadOnlySpan<byte> CrLf => [CR, LF];
 
     public bool TryParseMessage(in ReadOnlySequence<byte> input, ref SequencePosition consumed, ref SequencePosition examined, out IrcMessage message)
     {
+        message = default;
         var reader = new SequenceReader<byte>(input);
 
-        if (!reader.TryReadTo(out ReadOnlySequence<byte> payload, IrcMessageDelimiter, advancePastDelimiter: true))
+        if (!reader.TryReadTo(out ReadOnlySequence<byte> payload, CrLf, advancePastDelimiter: true))
         {
-            message = null;
             return false;
         }
 
@@ -33,6 +31,6 @@ public class IrcProtocol : IMessageReader<IrcMessage>, IMessageWriter<string>
     public void WriteMessage(string message, IBufferWriter<byte> output)
     {
         output.Write(Encoding.UTF8.GetBytes(message));
-        output.Write(IrcMessageDelimiter);
+        output.Write(CrLf);
     }
 }
